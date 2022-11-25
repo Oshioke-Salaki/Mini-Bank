@@ -12,14 +12,14 @@ const account1 = {
     pin: 1111,
 
     movementsDates: [
-        '2019-11-01T13:15:33.035Z',
-        '2019-11-30T09:48:16.867Z',
-        '2019-12-25T06:04:23.907Z',
-        '2020-01-25T14:18:46.235Z',
-        '2020-02-05T16:33:06.386Z',
-        '2020-04-10T14:43:26.374Z',
-        '2020-06-25T18:49:59.371Z',
-        '2020-07-26T12:01:20.894Z',
+        '2022-09-28T12:01:20.894Z',
+        '2022-10-30T09:48:16.867Z',
+        '2022-11-01T06:04:23.907Z',
+        '2022-11-05T14:18:46.235Z',
+        '2022-11-20T13:15:33.035Z',
+        '2022-11-21T13:15:33.035Z',
+        '2022-11-22T13:15:33.035Z',
+        '2022-11-23T13:15:33.035Z',
     ],
     currency: 'USD',
     locale: 'en-US',
@@ -32,14 +32,14 @@ const account2 = {
     pin: 2222,
 
     movementsDates: [
-        '2019-11-01T13:15:33.035Z',
-        '2019-11-30T09:48:16.867Z',
-        '2019-12-25T06:04:23.907Z',
-        '2020-01-25T14:18:46.235Z',
-        '2020-02-05T16:33:06.386Z',
-        '2020-04-10T14:43:26.374Z',
-        '2020-06-25T18:49:59.371Z',
-        '2020-07-26T12:01:20.894Z',
+        '2022-09-28T12:01:20.894Z',
+        '2022-10-30T09:48:16.867Z',
+        '2022-11-01T06:04:23.907Z',
+        '2022-11-05T14:18:46.235Z',
+        '2022-11-20T13:15:33.035Z',
+        '2022-11-21T13:15:33.035Z',
+        '2022-11-22T13:15:33.035Z',
+        '2022-11-23T13:15:33.035Z',
     ],
     currency: 'USD',
     locale: 'en-US',
@@ -52,14 +52,14 @@ const account3 = {
     pin: 3333,
 
     movementsDates: [
-        '2019-11-01T13:15:33.035Z',
-        '2019-11-30T09:48:16.867Z',
-        '2019-12-25T06:04:23.907Z',
-        '2020-01-25T14:18:46.235Z',
-        '2020-02-05T16:33:06.386Z',
-        '2020-04-10T14:43:26.374Z',
-        '2020-06-25T18:49:59.371Z',
-        '2020-07-26T12:01:20.894Z',
+        '2022-09-28T12:01:20.894Z',
+        '2022-10-30T09:48:16.867Z',
+        '2022-11-01T06:04:23.907Z',
+        '2022-11-05T14:18:46.235Z',
+        '2022-11-20T13:15:33.035Z',
+        '2022-11-21T13:15:33.035Z',
+        '2022-11-22T13:15:33.035Z',
+        '2022-11-23T13:15:33.035Z',
     ],
     currency: 'USD',
     locale: 'en-US',
@@ -72,14 +72,14 @@ const account4 = {
     pin: 4444,
 
     movementsDates: [
-        '2019-11-01T13:15:33.035Z',
-        '2019-11-30T09:48:16.867Z',
-        '2019-12-25T06:04:23.907Z',
-        '2020-01-25T14:18:46.235Z',
-        '2020-02-05T16:33:06.386Z',
-        '2020-04-10T14:43:26.374Z',
-        '2020-06-25T18:49:59.371Z',
-        '2020-07-26T12:01:20.894Z',
+        '2022-09-28T12:01:20.894Z',
+        '2022-10-30T09:48:16.867Z',
+        '2022-11-01T06:04:23.907Z',
+        '2022-11-05T14:18:46.235Z',
+        '2022-11-20T13:15:33.035Z',
+        '2022-11-21T13:15:33.035Z',
+        '2022-11-22T13:15:33.035Z',
+        '2022-11-23T13:15:33.035Z',
     ],
     currency: 'USD',
     locale: 'en-US',
@@ -113,6 +113,24 @@ const inputLoanAmount = document.querySelector('.form__input--loan-amount');
 const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
+const formatMovementsDate = (date, locale) => {
+    const calcDaysPassed = (date1, date2) =>
+        Math.round(Math.abs(date2 - date1) / (1000 * 60 * 60 * 24));
+    const daysPassed = calcDaysPassed(new Date(), date);
+    console.log(daysPassed);
+
+    if (daysPassed === 0) return 'Today';
+    if (daysPassed === 1) return 'Yesterday';
+    if (daysPassed <= 7) return `${daysPassed} days ago`;
+    else {
+        // const day = `${date.getDate()}`.padStart(2, '0');
+        // const month = `${date.getMonth() + 1}`.padStart(2, '0');
+        // const year = date.getFullYear();
+
+        // return `${day}/${month}/${year}`;
+        return new Intl.DateTimeFormat(locale).format(date);
+    }
+};
 const displayMovements = function(acc, sort = false) {
     containerMovements.innerHTML = '';
 
@@ -123,17 +141,19 @@ const displayMovements = function(acc, sort = false) {
         const type = movement > 0 ? 'deposit' : 'withdrawal';
 
         const date = new Date(acc.movementsDates[index]);
-        const day = `${date.getDate()}`.padStart(2, '0');
-        const month = `${date.getMonth() + 1}`.padStart(2, '0');
-        const year = date.getFullYear();
-        const displayDate = `${day}/${month}/${year}`;
+        const displayDate = formatMovementsDate(date, acc.locale);
+
+        const formattedMov = new Intl.NumberFormat(acc.locale, {
+            style: 'currency',
+            currency: acc.currency,
+        }).format(movement);
 
         const html = `<div class="movements__row">
         <div class="movements__type movements__type--${type}">${
       index + 1
     } ${type}</div>
     <div class="movements__date">${displayDate}</div>
-    <div class="movements__value">${Math.abs(movement).toFixed(2)}€</div>
+    <div class="movements__value">${formattedMov}</div>
     </div>`;
 
         containerMovements.insertAdjacentHTML('afterbegin', html);
@@ -145,8 +165,12 @@ const clacDisplayBalance = function(account) {
         (acc, current) => acc + current,
         0
     );
+    const formattedMov = new Intl.NumberFormat(account.locale, {
+        style: 'currency',
+        currency: account.currency,
+    }).format(account.balance);
 
-    labelBalance.textContent = `${account.balance.toFixed(2)}€`;
+    labelBalance.textContent = `${formattedMov}`;
 };
 
 const calcDisplaySummary = function(account) {
@@ -165,9 +189,18 @@ const calcDisplaySummary = function(account) {
         .filter(int => int > 1)
         .reduce((acc, int) => acc + int, 0);
 
-    labelSumIn.textContent = `${incomes}€`;
-    labelSumOut.textContent = `${Math.abs(out)}€`;
-    labelSumInterest.textContent = `${interest}€`;
+    labelSumIn.textContent = new Intl.NumberFormat(account.locale, {
+        style: 'currency',
+        currency: account.currency,
+    }).format(incomes);
+    labelSumOut.textContent = new Intl.NumberFormat(account.locale, {
+        style: 'currency',
+        currency: account.currency,
+    }).format(Math.abs(out));
+    labelSumInterest.textContent = new Intl.NumberFormat(account.locale, {
+        style: 'currency',
+        currency: account.currency,
+    }).format(interest);
 };
 
 const createUsernames = function(accounts) {
@@ -190,12 +223,37 @@ const updateUI = function(account) {
     calcDisplaySummary(account);
 };
 
-let currentAccount;
+const startLogOutTimer = () => {
+    const tick = () => {
+        //In each call, print the remaining time to UI
+        const min = String(Math.trunc(time / 60)).padStart(2, 0);
+        const sec = String(time % 60).padStart(2, 0);
+        labelTimer.textContent = `${min}:${sec}`;
+
+        //When 0 seconds, stop timer and log out user
+        if (time === 0) {
+            clearInterval(timer);
+            labelWelcome.textContent = 'Log in to get started';
+            containerApp.style.opacity = 0;
+        }
+        //decrease time by 1s
+        time--;
+    };
+    //set time to 5 minutes
+    let time = 300;
+    //call the timer every second
+    tick();
+    const timer = setInterval(tick, 1000);
+
+    return timer;
+};
+
+let currentAccount, timer;
 
 //FAKE ALWAYS LOGGED IN
-currentAccount = account1;
-updateUI(currentAccount);
-containerApp.style.opacity = 100;
+// currentAccount = account1;
+// updateUI(currentAccount);
+// containerApp.style.opacity = 100;
 
 btnLogin.addEventListener('click', function(e) {
     currentAccount = accounts.find(
@@ -211,17 +269,35 @@ btnLogin.addEventListener('click', function(e) {
 
         //curent date and time
         const now = new Date();
-        const day = `${now.getDate()}`.padStart(2, '0');
-        const month = `${now.getMonth() + 1}`.padStart(2, '0');
-        const year = now.getFullYear();
-        const hour = `${now.getHours()}`.padStart(2, '0');
-        const min = now.getMinutes();
-        labelDate.textContent = `${day}/${month}/${year}, ${hour}:${min}`;
+        // const day = `${now.getDate()}`.padStart(2, '0');
+        // const month = `${now.getMonth() + 1}`.padStart(2, '0');
+        // const year = now.getFullYear();
+        // const hour = `${now.getHours()}`.padStart(2, '0');
+        // const min = `${now.getMinutes()}`.padStart(2, '0');
+        // labelDate.textContent = `${day}/${month}/${year}, ${hour}:${min}`;
+
+        const options = {
+            hour: 'numeric',
+            minute: 'numeric',
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric',
+            weekday: 'long',
+        };
+
+        // const locale = navigator.language;
+        labelDate.textContent = new Intl.DateTimeFormat(
+            currentAccount.locale,
+            options
+        ).format(now);
 
         //clear input feild
         inputLoginUsername.value = inputLoginPin.value = '';
         inputLoginPin.blur();
         inputLoginUsername.blur();
+
+        if (timer) clearInterval(timer);
+        timer = startLogOutTimer();
 
         updateUI(currentAccount);
     }
@@ -251,6 +327,10 @@ btnTransfer.addEventListener('click', e => {
         receiverAccount.movementsDates.push(new Date().toISOString());
         //UPDATE UI
         updateUI(currentAccount);
+
+        //reset timer
+        clearInterval(timer);
+        timer = startLogOutTimer();
     }
 
     e.preventDefault();
@@ -263,13 +343,19 @@ btnLoan.addEventListener('click', e => {
         amount > 0 &&
         currentAccount.movements.some(deposit => deposit >= 0.1 * amount)
     ) {
-        currentAccount.movements.push(amount);
+        setTimeout(() => {
+            currentAccount.movements.push(amount);
 
-        //ADD LOAN DATE
-        currentAccount.movementsDates.push(new Date().toISOString());
+            //ADD LOAN DATE
+            currentAccount.movementsDates.push(new Date().toISOString());
 
-        //UPDATE UI
-        updateUI(currentAccount);
+            //UPDATE UI
+            updateUI(currentAccount);
+
+            //reset timer
+            clearInterval(timer);
+            timer = startLogOutTimer();
+        }, 2500);
     }
 
     inputLoanAmount.value = '';
@@ -380,3 +466,8 @@ labelBalance.addEventListener('click', function() {
         if (i % 2 === 0) row.style.backgroundColor = 'orangered';
     });
 });
+
+// setInterval(() => {
+//     const now = new Date();
+//     console.log(now);
+// }, 1000);
